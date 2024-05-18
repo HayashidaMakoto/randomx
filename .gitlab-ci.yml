@@ -16,3 +16,4 @@ test:cargo:
     - cargo install cargo-nextest --locked
     - cargo nextest run --no-capture --release
     - RUSTDOCFLAGS="-D warnings" cargo doc --all-features --no-deps
+    - cargo clippy --all-features --all-targets --tests -- -W clippy::all -D warnings
