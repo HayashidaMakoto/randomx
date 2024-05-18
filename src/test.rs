@@ -1,3 +1,5 @@
+use aes::cipher::{generic_array::GenericArray, BlockDecrypt, KeyInit};
+use aes::Aes128;
 use blake2::{Blake2b512, Digest};
 
 #[test]
@@ -89,4 +91,22 @@ fn test_aesgenerator_4r_key_consistency() {
     assert_eq!(key5, res[16..32]);
     assert_eq!(key6, res[32..48]);
     assert_eq!(key7, res[48..64]);
+}
+
+#[test]
+fn test_regtest_aes_generator_1r() {
+    let key0: [u8; 16] = [
+        0x53, 0xa5, 0xac, 0x6d, 0x09, 0x66, 0x71, 0x62, 0x2b, 0x55, 0xb5, 0xdb, 0x17, 0x49, 0xf4,
+        0xb4,
+    ];
+    let key0 = GenericArray::from(key0);
+
+    let cipher = Aes128::new(&key0);
+
+    let mut state0 = GenericArray::from([0; 16]);
+    cipher.decrypt_block(&mut state0);
+    let exp_output: [u8; 16] = [
+        202, 211, 173, 142, 251, 44, 222, 33, 36, 58, 219, 164, 0, 30, 149, 104,
+    ];
+    assert_eq!(state0, exp_output.into());
 }
