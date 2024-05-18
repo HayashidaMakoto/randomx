@@ -6,6 +6,7 @@ pub mod parameters;
 
 /// Implement [AesGenerator1R](https://github.com/tevador/RandomX/blob/master/doc/specs.md#32-aesgenerator1r).
 ///
+/// TODO: implement it in assembly. It is pretty straightforward.
 /// Specification goes like this:
 ///
 /// ### 3.2 AesGenerator1R
@@ -76,6 +77,8 @@ pub fn aes_generator_1r(input: [u8; 64]) -> [u8; 64] {
 }
 
 /// Implement [AesGenerator4R](https://github.com/tevador/RandomX/blob/master/doc/specs.md#32-aesgenerator4r).
+///
+/// TODO: implement it in assembly. It is pretty straightforward.
 ///
 /// Specification goes like this:
 ///
