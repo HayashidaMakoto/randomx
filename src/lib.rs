@@ -75,5 +75,130 @@ pub fn aes_generator_1r(input: [u8; 64]) -> [u8; 64] {
     output
 }
 
+/// Implement [AesGenerator4R](https://github.com/tevador/RandomX/blob/master/doc/specs.md#32-aesgenerator4r).
+///
+/// Specification goes like this:
+///
+/// ### 3.3 AesGenerator4R
+///
+/// AesGenerator4R works similar way as AesGenerator1R, except it uses 4 rounds
+/// per column. Columns 0 and 1 use a different set of keys than columns 2 and
+/// 3.
+///
+/// ```
+/// state0 (16 B)    state1 (16 B)    state2 (16 B)    state3 (16 B)
+///      |                |                |                |
+///  AES decrypt      AES encrypt      AES decrypt      AES encrypt
+///    (key0)           (key0)           (key4)           (key4)
+///      |                |                |                |
+///      v                v                v                v
+///  AES decrypt      AES encrypt      AES decrypt      AES encrypt
+///    (key1)           (key1)           (key5)           (key5)
+///      |                |                |                |
+///      v                v                v                v
+///  AES decrypt      AES encrypt      AES decrypt      AES encrypt
+///    (key2)           (key2)           (key6)           (key6)
+///      |                |                |                |
+///      v                v                v                v
+///  AES decrypt      AES encrypt      AES decrypt      AES encrypt
+///    (key3)           (key3)           (key7)           (key7)
+///      |                |                |                |
+///      v                v                v                v
+///   state0'          state1'          state2'          state3'
+/// ```
+pub fn aes_generator_4r(input: [u8; 64]) -> [u8; 64] {
+    // state0
+    let state0 = {
+        let key0 = GenericArray::from(parameters::AES_GENERATOR_4R_K0);
+        let cipher = Aes128::new(&key0);
+        let state: [u8; 16] = input[0..16].try_into().unwrap();
+        let mut state = GenericArray::from(state);
+        cipher.decrypt_block(&mut state);
+
+        let key1 = GenericArray::from(parameters::AES_GENERATOR_4R_K1);
+        let cipher = Aes128::new(&key1);
+        cipher.decrypt_block(&mut state);
+
+        let key2 = GenericArray::from(parameters::AES_GENERATOR_4R_K2);
+        let cipher = Aes128::new(&key2);
+        cipher.decrypt_block(&mut state);
+
+        let key3 = GenericArray::from(parameters::AES_GENERATOR_4R_K3);
+        let cipher = Aes128::new(&key3);
+        cipher.decrypt_block(&mut state);
+        state
+    };
+
+    let state1 = {
+        let key0 = GenericArray::from(parameters::AES_GENERATOR_4R_K0);
+        let cipher = Aes128::new(&key0);
+        let state: [u8; 16] = input[16..32].try_into().unwrap();
+        let mut state = GenericArray::from(state);
+        cipher.encrypt_block(&mut state);
+
+        let key1 = GenericArray::from(parameters::AES_GENERATOR_4R_K1);
+        let cipher = Aes128::new(&key1);
+        cipher.encrypt_block(&mut state);
+
+        let key2 = GenericArray::from(parameters::AES_GENERATOR_4R_K2);
+        let cipher = Aes128::new(&key2);
+        cipher.encrypt_block(&mut state);
+
+        let key3 = GenericArray::from(parameters::AES_GENERATOR_4R_K3);
+        let cipher = Aes128::new(&key3);
+        cipher.encrypt_block(&mut state);
+        state
+    };
+
+    let state2 = {
+        let key = GenericArray::from(parameters::AES_GENERATOR_4R_K4);
+        let cipher = Aes128::new(&key);
+        let state: [u8; 16] = input[32..48].try_into().unwrap();
+        let mut state = GenericArray::from(state);
+        cipher.decrypt_block(&mut state);
+
+        let key = GenericArray::from(parameters::AES_GENERATOR_4R_K5);
+        let cipher = Aes128::new(&key);
+        cipher.decrypt_block(&mut state);
+
+        let key = GenericArray::from(parameters::AES_GENERATOR_4R_K6);
+        let cipher = Aes128::new(&key);
+        cipher.decrypt_block(&mut state);
+
+        let key = GenericArray::from(parameters::AES_GENERATOR_4R_K7);
+        let cipher = Aes128::new(&key);
+        cipher.decrypt_block(&mut state);
+        state
+    };
+
+    let state3 = {
+        let key = GenericArray::from(parameters::AES_GENERATOR_4R_K4);
+        let cipher = Aes128::new(&key);
+        let state: [u8; 16] = input[48..64].try_into().unwrap();
+        let mut state = GenericArray::from(state);
+        cipher.encrypt_block(&mut state);
+
+        let key = GenericArray::from(parameters::AES_GENERATOR_4R_K5);
+        let cipher = Aes128::new(&key);
+        cipher.encrypt_block(&mut state);
+
+        let key = GenericArray::from(parameters::AES_GENERATOR_4R_K6);
+        let cipher = Aes128::new(&key);
+        cipher.encrypt_block(&mut state);
+
+        let key = GenericArray::from(parameters::AES_GENERATOR_4R_K7);
+        let cipher = Aes128::new(&key);
+        cipher.encrypt_block(&mut state);
+        state
+    };
+
+    let mut output: [u8; 64] = [0; 64];
+    output[0..16].copy_from_slice(state0.as_slice());
+    output[16..32].copy_from_slice(state1.as_slice());
+    output[32..48].copy_from_slice(state2.as_slice());
+    output[48..64].copy_from_slice(state3.as_slice());
+
+    output
+}
 #[cfg(test)]
 pub mod test;
