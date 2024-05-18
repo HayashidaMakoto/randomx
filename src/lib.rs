@@ -1,5 +1,6 @@
 use aes::cipher::{generic_array::GenericArray, BlockDecrypt, BlockEncrypt, KeyInit};
 use aes::Aes128;
+use blake2::{Blake2b512, Blake2s256, Digest};
 
 pub mod parameters;
 // pub mod registers;
@@ -296,4 +297,17 @@ pub fn aes_hash1r(block: Vec<u8>) -> [u8; 64] {
     output[48..64].copy_from_slice(state3.as_slice());
 
     output
+}
+
+pub fn blake_generator(seed: Vec<u8>) {
+    assert!(seed.len() <= parameters::BLAKE_GENERATOR_SEED_MAX_SIZE);
+
+    // We initialize with only zeroes. The seed must be padded with zeroes if
+    // its length is not 60
+    let mut padded_seed: [u8; parameters::BLAKE_GENERATOR_SEED_MAX_SIZE] =
+        [0; parameters::BLAKE_GENERATOR_SEED_MAX_SIZE];
+    // Equivalent that copying into the first N bytes.
+    padded_seed.copy_from_slice(seed.as_slice());
+
+    // let mut hasher = Blake2b512::new();
 }
