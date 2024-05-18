@@ -6,18 +6,11 @@
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 
-stages:
-- test
+image: "rust:latest"
 
-sast:
-  stage: test
-  image: rust
+
+# Use cargo to test the project
+test:cargo:
   script:
-    # Nextest
-    - cargo install cargo-nextest --locked
-    - cargo fmt -- --check
-    # Clippy
-    - cargo clippy --all-features --all-targets --tests -- -W clippy::all -D warnings
-
-include:
-- template: Security/SAST.gitlab-ci.yml
+    - rustc --version && cargo --version  # Print version info for debugging
+    - cargo test --workspace --verbose
