@@ -13,7 +13,10 @@ sast:
   stage: test
   image: rust
   script:
-    - cargo test
+    # Nextest
+    - cargo install cargo-nextest --locked
+    - cargo fmt -- --check
+    # Clippy
     - cargo clippy --all-features --all-targets --tests -- -W clippy::all -D warnings
 
 include:
