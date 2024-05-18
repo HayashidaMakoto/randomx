@@ -1,5 +1,4 @@
-use blake2::{Blake2b512, Blake2s256, Digest};
-// use hex_literal::hex;
+use blake2::{Blake2b512, Digest};
 
 #[test]
 // Test the keys have been generated as described in the specification.
