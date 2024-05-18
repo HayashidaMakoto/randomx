@@ -203,3 +203,97 @@ pub fn aes_generator_4r(input: [u8; 64]) -> [u8; 64] {
 
     output
 }
+
+pub fn aes_hash1r(block: Vec<u8>) -> [u8; 64] {
+    // Let's suppose the block is 64bytes for now.
+    // I don't see how padding works.
+    assert_eq!(block.len(), 64);
+    let input: [u8; 64] = block.try_into().unwrap();
+
+    let mut state0 = GenericArray::from(parameters::AES_HASH1R_STATE0);
+    {
+        let key0: [u8; 16] = input[0..16].try_into().unwrap();
+        let key0 = GenericArray::from(key0);
+        let cipher = Aes128::new(&key0);
+        cipher.decrypt_block(&mut state0);
+    };
+
+    // key1 - encrypt
+    let mut state1 = GenericArray::from(parameters::AES_HASH1R_STATE1);
+    {
+        let key1: [u8; 16] = input[16..32].try_into().unwrap();
+        let key1 = GenericArray::from(key1);
+        let cipher = Aes128::new(&key1);
+        cipher.encrypt_block(&mut state1);
+    };
+
+    // key2 - decrypt
+    let mut state2 = GenericArray::from(parameters::AES_HASH1R_STATE2);
+    {
+        let key2: [u8; 16] = input[32..48].try_into().unwrap();
+        let key2 = GenericArray::from(key2);
+        let cipher = Aes128::new(&key2);
+        cipher.decrypt_block(&mut state2);
+    };
+
+    // key3 - encrypt
+    let mut state3 = GenericArray::from(parameters::AES_HASH1R_STATE3);
+    {
+        let key3: [u8; 16] = input[48..64].try_into().unwrap();
+        let key3 = GenericArray::from(key3);
+        let cipher = Aes128::new(&key3);
+        cipher.encrypt_block(&mut state3);
+    };
+
+    // TODO: process other blocks.
+    // Now the two final rounds. We are supposed to have state0, state1, state2
+    // and state3
+
+    // Compute finalState0
+    {
+        let key = GenericArray::from(parameters::AES_HASH1R_XKEY0);
+        let cipher = Aes128::new(&key);
+        cipher.encrypt_block(&mut state0);
+        let key = GenericArray::from(parameters::AES_HASH1R_XKEY1);
+        let cipher = Aes128::new(&key);
+        cipher.encrypt_block(&mut state0);
+    }
+
+    // Compute finalState1
+    {
+        let key = GenericArray::from(parameters::AES_HASH1R_XKEY0);
+        let cipher = Aes128::new(&key);
+        cipher.decrypt_block(&mut state1);
+        let key = GenericArray::from(parameters::AES_HASH1R_XKEY1);
+        let cipher = Aes128::new(&key);
+        cipher.decrypt_block(&mut state1);
+    }
+
+    // Compute finalState2
+    {
+        let key = GenericArray::from(parameters::AES_HASH1R_XKEY0);
+        let cipher = Aes128::new(&key);
+        cipher.encrypt_block(&mut state2);
+        let key = GenericArray::from(parameters::AES_HASH1R_XKEY1);
+        let cipher = Aes128::new(&key);
+        cipher.encrypt_block(&mut state2);
+    }
+
+    // Compute finalState3
+    {
+        let key = GenericArray::from(parameters::AES_HASH1R_XKEY0);
+        let cipher = Aes128::new(&key);
+        cipher.decrypt_block(&mut state3);
+        let key = GenericArray::from(parameters::AES_HASH1R_XKEY1);
+        let cipher = Aes128::new(&key);
+        cipher.decrypt_block(&mut state3);
+    }
+
+    let mut output: [u8; 64] = [0; 64];
+    output[0..16].copy_from_slice(state0.as_slice());
+    output[16..32].copy_from_slice(state1.as_slice());
+    output[32..48].copy_from_slice(state2.as_slice());
+    output[48..64].copy_from_slice(state3.as_slice());
+
+    output
+}
