@@ -88,7 +88,7 @@ pub fn aes_generator_1r(input: [u8; 64]) -> [u8; 64] {
 /// per column. Columns 0 and 1 use a different set of keys than columns 2 and
 /// 3.
 ///
-/// ```
+/// ```text
 /// state0 (16 B)    state1 (16 B)    state2 (16 B)    state3 (16 B)
 ///      |                |                |                |
 ///  AES decrypt      AES encrypt      AES decrypt      AES encrypt
