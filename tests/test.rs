@@ -110,3 +110,13 @@ fn test_regtest_aes_generator_1r() {
     ];
     assert_eq!(state0, exp_output.into());
 }
+
+#[test]
+fn test_vectors_aes_generator_1r() {
+    // FIXME
+}
+
+#[test]
+fn test_vectors_aes_generator_4r() {
+    // FIXME
+}

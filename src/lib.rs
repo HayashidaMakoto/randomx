@@ -203,5 +203,3 @@ pub fn aes_generator_4r(input: [u8; 64]) -> [u8; 64] {
 
     output
 }
-#[cfg(test)]
-pub mod test;
