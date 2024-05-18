@@ -13,4 +13,6 @@ image: "rust:latest"
 test:cargo:
   script:
     - rustc --version && cargo --version  # Print version info for debugging
-    - cargo test --workspace --verbose
+    - cargo install cargo-nextest --locked
+    - cargo nextest run --no-capture --release
+    - RUSTDOCFLAGS="-D warnings" cargo doc --all-features --no-deps
