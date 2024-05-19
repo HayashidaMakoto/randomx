@@ -1,6 +1,5 @@
 use aes::cipher::{generic_array::GenericArray, BlockDecrypt, BlockEncrypt, KeyInit};
 use aes::Aes128;
-use blake2::{Blake2b512, Blake2s256, Digest};
 
 pub mod parameters;
 pub mod vm;

@@ -60,8 +60,8 @@ pub struct VMEnvironment {
     pub scratchpad: [u8; RANDOMX_SCRATCHPAD_L3],
 }
 
-impl VMEnvironment {
-    pub fn new() -> VMEnvironment {
+impl Default for VMEnvironment {
+    fn default() -> VMEnvironment {
         let ma = 0;
         let mx = 0;
         let r_registers = [0; 8];
@@ -77,12 +77,14 @@ impl VMEnvironment {
             sp_addr0: mx,
             sp_addr1: ma,
             program_buffer: [0; RANDOMX_PROGRAM_SIZE],
-            scratchpad: [0; RANDOMX_SCRATCHPAD_L3]
+            scratchpad: [0; RANDOMX_SCRATCHPAD_L3],
         }
     }
+}
 
+impl VMEnvironment {
     /// Load the program into the program buffer of the environment
-    pub fn load_program(env: &mut Self, filename: String) {
+    pub fn load_program(_env: &mut Self, _filename: String) {
         //
     }
 }
@@ -130,8 +132,6 @@ pub enum StoreInstruction {
     ISTORE,
 }
 
-pub fn interpreter(env: VMEnvironment) {
-    while env.ic > 0 {
-        //
-    }
+pub fn interpreter(_env: &mut VMEnvironment) {
+    // TODO
 }
