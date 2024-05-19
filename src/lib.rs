@@ -298,15 +298,23 @@ pub fn aes_hash1r(block: Vec<u8>) -> [u8; 64] {
     output
 }
 
-pub fn blake_generator(seed: Vec<u8>) {
-    assert!(seed.len() <= parameters::BLAKE_GENERATOR_SEED_MAX_SIZE);
+#[allow(dead_code)]
+pub struct BlakeGenerator {
+    nonce: [u8; parameters::BLAKE_GENERATOR_SEED_MAX_SIZE],
+}
 
-    // We initialize with only zeroes. The seed must be padded with zeroes if
-    // its length is not 60
-    let mut padded_seed: [u8; parameters::BLAKE_GENERATOR_SEED_MAX_SIZE] =
-        [0; parameters::BLAKE_GENERATOR_SEED_MAX_SIZE];
-    // Equivalent that copying into the first N bytes.
-    padded_seed.copy_from_slice(seed.as_slice());
+impl BlakeGenerator {
+    pub fn from_seed(seed: Vec<u8>) -> Self {
+        assert!(seed.len() <= parameters::BLAKE_GENERATOR_SEED_MAX_SIZE);
 
-    // let mut hasher = Blake2b512::new();
+        // We initialize with only zeroes. The seed must be padded with zeroes if
+        // its length is not 60
+        let mut padded_nonce: [u8; parameters::BLAKE_GENERATOR_SEED_MAX_SIZE] =
+            [0; parameters::BLAKE_GENERATOR_SEED_MAX_SIZE];
+        // Equivalent that copying into the first N bytes.
+        padded_nonce.copy_from_slice(seed.as_slice());
+        Self {
+            nonce: padded_nonce,
+        }
+    }
 }
