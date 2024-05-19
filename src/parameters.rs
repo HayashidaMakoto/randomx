@@ -128,3 +128,45 @@ pub const AES_HASH1R_XKEY1: [u8; 16] = [
 ];
 
 pub const BLAKE_GENERATOR_SEED_MAX_SIZE: usize = 60;
+
+/// Instruction frequencies
+
+/// Integer instructions
+pub const RANDOMX_FREQ_IADD_RS: usize = 16;
+pub const RANDOMX_FREQ_IADD_M: usize = 7;
+pub const RANDOMX_FREQ_ISUB_R: usize = 16;
+pub const RANDOMX_FREQ_ISUB_M: usize = 7;
+pub const RANDOMX_FREQ_IMUL_R: usize = 16;
+pub const RANDOMX_FREQ_IMUL_M: usize = 4;
+pub const RANDOMX_FREQ_IMULH_R: usize = 4;
+pub const RANDOMX_FREQ_IMULH_M: usize = 1;
+pub const RANDOMX_FREQ_ISMULH_R: usize = 4;
+pub const RANDOMX_FREQ_ISMULH_M: usize = 1;
+pub const RANDOMX_FREQ_IMUL_RCP: usize = 8;
+pub const RANDOMX_FREQ_INEG_R: usize = 2;
+pub const RANDOMX_FREQ_IXOR_R: usize = 15;
+pub const RANDOMX_FREQ_IXOR_M: usize = 5;
+pub const RANDOMX_FREQ_IROR_R: usize = 8;
+pub const RANDOMX_FREQ_IROL_R: usize = 2;
+pub const RANDOMX_FREQ_ISWAP_R: usize = 4;
+
+/// Floating point instructions
+pub const RANDOMX_FREQ_FSWAP_R: usize = 4;
+pub const RANDOMX_FREQ_FADD_R: usize = 16;
+pub const RANDOMX_FREQ_FADD_M: usize = 5;
+pub const RANDOMX_FREQ_FSUB_R: usize = 16;
+pub const RANDOMX_FREQ_FSUB_M: usize = 5;
+pub const RANDOMX_FREQ_FSCAL_R: usize = 6;
+pub const RANDOMX_FREQ_FMUL_R: usize = 32;
+pub const RANDOMX_FREQ_FDIV_M: usize = 4;
+pub const RANDOMX_FREQ_FSQRT_R: usize = 6;
+
+/// Control instructions
+pub const RANDOMX_FREQ_CBRANCH: usize = 25;
+pub const RANDOMX_FREQ_CFROUND: usize = 1;
+
+/// Store instruction
+pub const RANDOMX_FREQ_ISTORE: usize = 16;
+
+/// No-op instruction
+pub const RANDOMX_FREQ_NOP: usize = 0;
