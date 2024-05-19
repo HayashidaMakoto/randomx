@@ -19,6 +19,8 @@ pub const RANDOMX_CACHE_ACCESSES: usize = 8;
 /// Target latency for SuperscalarHash (in cycles of the reference CPU)
 pub const RANDOMX_SUPERSCALAR_LATENCY: usize = 170;
 
+pub const RANDOMX_SUPERSCALAR_MAX_SIZE: usize = 3 * RANDOMX_SUPERSCALAR_LATENCY + 2;
+
 /// Dataset base size in bytes
 pub const RANDOMX_DATASET_BASE_SIZE: usize = 2147483648;
 
