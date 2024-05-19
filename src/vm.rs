@@ -77,6 +77,7 @@ impl VMEnvironment {
             sp_addr0: mx,
             sp_addr1: ma,
             program_buffer: [0; RANDOMX_PROGRAM_SIZE],
+            scratchpad: [0; RANDOMX_SCRATCHPAD_L3]
         }
     }
 
