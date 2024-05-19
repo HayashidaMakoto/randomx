@@ -3,7 +3,7 @@ use aes::Aes128;
 use blake2::{Blake2b512, Blake2s256, Digest};
 
 pub mod parameters;
-// pub mod registers;
+pub mod vm;
 
 /// Implement [AesGenerator1R](https://github.com/tevador/RandomX/blob/master/doc/specs.md#32-aesgenerator1r).
 ///
