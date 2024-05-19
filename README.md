@@ -6,3 +6,7 @@ The reference implementation is available on
 
 This implementation in Rust aims to follow the specification described in the
 original implementation.
+
+
+Interesting articles regarding analysis of RandomX:
+- [Trails of bits](https://blog.trailofbits.com/2019/07/02/state/)
