@@ -1,6 +1,9 @@
+use std::str::FromStr;
+
 use aes::cipher::{generic_array::GenericArray, BlockDecrypt, KeyInit};
 use aes::Aes128;
 use blake2::{Blake2b512, Digest};
+use randomx::BlakeGenerator;
 
 #[test]
 // Test the keys have been generated as described in the specification.
@@ -136,4 +139,44 @@ fn test_vectors_aes_generator_1r() {
 #[test]
 fn test_vectors_aes_generator_4r() {
     // FIXME
+}
+
+#[test]
+fn test_blake2_generator_init_with_nonce() {
+    // Test generated from reference implementation, commit 89aba80
+    let seed: String = String::from_str("test key 000").unwrap();
+    let seed_u8: Vec<u8> = seed.into_bytes();
+    {
+        let blake2_generator = BlakeGenerator::from_seed(seed_u8.clone(), 32);
+        assert_eq!(blake2_generator.data[60], 32);
+        assert_eq!(blake2_generator.data[61], 0);
+        assert_eq!(blake2_generator.data[62], 0);
+        assert_eq!(blake2_generator.data[63], 0);
+    }
+    {
+        let blake2_generator = BlakeGenerator::from_seed(seed_u8.clone(), 257);
+        assert_eq!(blake2_generator.data[60], 1);
+        assert_eq!(blake2_generator.data[61], 1);
+        assert_eq!(blake2_generator.data[62], 0);
+        assert_eq!(blake2_generator.data[63], 0);
+    }
+
+    {
+        let blake2_generator = BlakeGenerator::from_seed(seed_u8.clone(), 256 * 256 + 1);
+        assert_eq!(blake2_generator.data[60], 1);
+        assert_eq!(blake2_generator.data[61], 0);
+        assert_eq!(blake2_generator.data[62], 1);
+        assert_eq!(blake2_generator.data[63], 0);
+    }
+}
+
+#[test]
+fn test_blake2_generator_get_byte() {
+    // Test generated from reference implementation, commit 89aba80
+    let seed: String = String::from_str("test key 000").unwrap();
+    let seed_u8: Vec<u8> = seed.into_bytes();
+    let mut blake2_generator = BlakeGenerator::from_seed(seed_u8, 0);
+    let res = blake2_generator.get_byte();
+    let exp_res: u8 = 216;
+    assert_eq!(exp_res, res);
 }

@@ -1,5 +1,6 @@
 use aes::cipher::{generic_array::GenericArray, BlockDecrypt, BlockEncrypt, KeyInit};
 use aes::Aes128;
+use blake2::{Blake2b512, Digest};
 
 pub mod parameters;
 pub mod vm;
@@ -303,7 +304,8 @@ pub struct BlakeGenerator {
     // The reference implementation seems to keep the nonce, as a c int, at the
     // end of the data field, 4 bytes.
     // The first 60 bytes are for the seed
-    data: [u8; 60 + 4],
+    pub data: [u8; 60 + 4],
+    // The data index is initialized to 64, the size of data.
     data_index: usize,
 }
 
@@ -318,20 +320,25 @@ impl BlakeGenerator {
         // We initialize with only zeroes. The seed must be padded with zeroes if
         // its length is not 60.
         // Equivalent that copying into the first N bytes.
-        data.copy_from_slice(seed.as_slice());
+        data[0..seed.len()].copy_from_slice(seed.as_slice());
         // FIXME: could be inlined for speed.
-        data[60] = ((nonce as u32) >> 24) as u8;
-        data[61] = ((nonce as u32) >> 16) as u8;
-        data[62] = ((nonce as u32) >> 8) as u8;
-        data[63] = (nonce as u32) as u8;
+        data[60] = (nonce as u32) as u8;
+        data[61] = ((nonce as u32) >> 8) as u8;
+        data[62] = ((nonce as u32) >> 16) as u8;
+        data[63] = ((nonce as u32) >> 24) as u8;
         Self {
             data,
-            data_index: 0,
+            data_index: 64,
         }
     }
 
     pub fn update_state(&mut self) {
         // Run blake2b and updates the data.
+        let mut hasher = Blake2b512::new();
+        hasher.update(self.data);
+        let res = hasher.finalize();
+        assert_eq!(res.len(), 64);
+        self.data.copy_from_slice(res.as_slice());
         self.data_index = 0;
     }
 
