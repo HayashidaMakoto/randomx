@@ -299,7 +299,6 @@ pub fn aes_hash1r(block: Vec<u8>) -> [u8; 64] {
     output
 }
 
-#[allow(dead_code)]
 pub struct BlakeGenerator {
     // The reference implementation seems to keep the nonce, as a c int, at the
     // end of the data field, 4 bytes.
