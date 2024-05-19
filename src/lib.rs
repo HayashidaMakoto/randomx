@@ -300,21 +300,54 @@ pub fn aes_hash1r(block: Vec<u8>) -> [u8; 64] {
 
 #[allow(dead_code)]
 pub struct BlakeGenerator {
-    nonce: [u8; parameters::BLAKE_GENERATOR_SEED_MAX_SIZE],
+    // The reference implementation seems to keep the nonce, as a c int, at the
+    // end of the data field, 4 bytes.
+    // The first 60 bytes are for the seed
+    data: [u8; 60 + 4],
+    data_index: usize,
 }
 
 impl BlakeGenerator {
-    pub fn from_seed(seed: Vec<u8>) -> Self {
+    pub fn from_seed(seed: Vec<u8>, nonce: i32) -> Self {
+        // FIXME: the reference implementation do not raise any error here. It
+        // only truncates the seed to 60 bytes.
+        // Q: Any potential attack?
         assert!(seed.len() <= parameters::BLAKE_GENERATOR_SEED_MAX_SIZE);
 
+        let mut data: [u8; 64] = [0; 64];
         // We initialize with only zeroes. The seed must be padded with zeroes if
-        // its length is not 60
-        let mut padded_nonce: [u8; parameters::BLAKE_GENERATOR_SEED_MAX_SIZE] =
-            [0; parameters::BLAKE_GENERATOR_SEED_MAX_SIZE];
+        // its length is not 60.
         // Equivalent that copying into the first N bytes.
-        padded_nonce.copy_from_slice(seed.as_slice());
+        data.copy_from_slice(seed.as_slice());
+        // FIXME: could be inlined for speed.
+        data[60] = ((nonce as u32) >> 24) as u8;
+        data[61] = ((nonce as u32) >> 16) as u8;
+        data[62] = ((nonce as u32) >> 8) as u8;
+        data[63] = (nonce as u32) as u8;
         Self {
-            nonce: padded_nonce,
+            data,
+            data_index: 0,
         }
+    }
+
+    pub fn update_state(&mut self) {
+        // Run blake2b and updates the data.
+        self.data_index = 0;
+    }
+
+    pub fn get_byte(&mut self) -> u8 {
+        if self.data_index + 1 > 64 {
+            self.update_state()
+        }
+        self.data[self.data_index]
+    }
+
+    pub fn get_u32(&mut self) -> u32 {
+        if self.data_index + 4 > 64 {
+            self.update_state()
+        }
+        let mut b: [u8; 4] = [0; 4];
+        b.copy_from_slice(&self.data[self.data_index..self.data_index + 4]);
+        u32::from_be_bytes(b)
     }
 }
