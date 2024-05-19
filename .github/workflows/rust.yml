@@ -23,4 +23,6 @@ jobs:
     - name: Run tests
       run: cargo nextest run --release
     - name: Generate doc
-      run: RUSTDOCFLAGS="-D warnings" cargo doc --all-features --no-deps    
+      run: RUSTDOCFLAGS="-D warnings" cargo doc --all-features --no-deps
+    - name: Clippy
+      run: cargo clippy --all-features --all-targets --tests -- -W clippy::all -D warnings
