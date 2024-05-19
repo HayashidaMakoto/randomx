@@ -61,6 +61,9 @@ pub struct VMEnvironment {
 }
 
 impl Default for VMEnvironment {
+    /// Initialize a new VMEnvironment.
+    /// It also performs the initialization described in
+    /// [4.6.1](https://github.com/tevador/RandomX/blob/master/doc/specs.md#461-initialization).
     fn default() -> VMEnvironment {
         let ma = 0;
         let mx = 0;
