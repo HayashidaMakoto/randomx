@@ -7,24 +7,24 @@ use crate::parameters::{RANDOMX_PROGRAM_ITERATIONS, RANDOMX_PROGRAM_SIZE, RANDOM
 /// ------------------------------------------------
 /// |  imm32    |    mod |   src |   dst |  opcode |
 /// ------------------------------------------------
-pub type Instruction = u64;
+pub type EncodedInstruction = u64;
 
 /// > A 32-bit immediate value that can be used as the source operand and is
 /// > used to calculate addresses for memory operations. The immediate value is
 /// > sign-extended to 64 bits unless specified otherwise.
-pub fn imm32(i: Instruction) -> u32 {
+pub fn imm32(i: EncodedInstruction) -> u32 {
     (i >> 32) as u32
 }
 
-pub fn mod_(i: Instruction) -> u8 {
+pub fn mod_(i: EncodedInstruction) -> u8 {
     (i >> 24) as u8
 }
 
-pub fn src(i: Instruction) -> u8 {
+pub fn src(i: EncodedInstruction) -> u8 {
     (i >> 16) as u8
 }
 
-pub fn dst(i: Instruction) -> u8 {
+pub fn dst(i: EncodedInstruction) -> u8 {
     (i >> 8) as u8
 }
 
@@ -33,7 +33,7 @@ pub fn dst(i: Instruction) -> u8 {
 /// > instructions. Each instruction can be encoded using multiple opcodes (the
 /// > number of opcodes specifies the frequency of the instruction in a random
 /// > program).
-pub fn opcode(i: Instruction) -> u8 {
+pub fn opcode(i: EncodedInstruction) -> u8 {
     i as u8
 }
 
@@ -93,46 +93,41 @@ impl VMEnvironment {
 }
 
 #[allow(non_camel_case_types)]
-pub enum IntegerInstruction {
-    IADD_RS,
-    IADD_M,
-    ISUB_R,
-    ISUB_M,
-    IMUL_R,
-    IMUL_M,
-    IMULH_R,
-    IMULH_M,
-    IMUL_RCP,
-    INEG_R,
-    IXOR_R,
-    IXOR_M,
-    IROR_R,
-    IROL_R,
-    ISWAP_R,
-}
-
-#[allow(non_camel_case_types)]
-pub enum FloatInstruction {
-    FSWAP_R,
-    FADD_R,
-    FADD_M,
-    FSUB_R,
-    FSUB_M,
-    FSCAL_R,
-    FMUL_R,
-    FDIV_M,
-    FSQRT_R,
-}
-
-#[allow(non_camel_case_types)]
-pub enum ControlInstruction {
-    CFROUND,
-    CBRANCH,
-}
-
-#[allow(non_camel_case_types)]
-pub enum StoreInstruction {
-    ISTORE,
+pub enum Instruction {
+    // Integer instruction
+    IADD_RS = 0,
+    IADD_M = 1,
+    ISUB_R = 2,
+    ISUB_M = 3,
+    IMUL_R = 4,
+    IMUL_M = 5,
+    IMULH_R = 6,
+    IMULH_M = 7,
+    ISMULH_R = 8,
+    ISMULH_M = 9,
+    IMUL_RCP = 10,
+    INEG_R = 11,
+    IXOR_R = 12,
+    IXOR_M = 13,
+    IROR_R = 14,
+    IROL_R = 15,
+    ISWAP_R = 16,
+    // Float instruction
+    FSWAP_R = 17,
+    FADD_R = 18,
+    FADD_M = 19,
+    FSUB_R = 20,
+    FSUB_M = 21,
+    FSCAL_R = 22,
+    FMUL_R = 23,
+    FDIV_M = 24,
+    FSQRT_R = 25,
+    // Control instruction
+    CBRANCH = 26,
+    CFROUND = 27,
+    // Store instruction
+    ISTORE = 28,
+    NOP = 29,
 }
 
 pub fn interpreter(_env: &mut VMEnvironment) {
