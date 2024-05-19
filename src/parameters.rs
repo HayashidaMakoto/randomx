@@ -29,7 +29,7 @@ pub const RANDOMX_DATASET_EXTRA_SIZE: usize = 33554368;
 pub const RANDOMX_PROGRAM_SIZE: usize = 256;
 
 /// The number of iterations per program
-pub const RANDOMX_PROGRAM_ITERATIONS: usize = 2048;
+pub const RANDOMX_PROGRAM_ITERATIONS: u32 = 2048;
 
 /// The number of programs per hash
 pub const RANDOMX_PROGRAM_COUNT: usize = 8;
