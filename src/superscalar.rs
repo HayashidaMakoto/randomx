@@ -23,6 +23,15 @@ pub enum SuperscalarInstructionType {
     INVALID = -1,
 }
 
+pub enum ExecutionPort {
+    P0 = 1,
+    P1 = 2,
+    P5 = 4,
+    P01 = 1 | 2,
+    P05 = 1 | 4,
+    P015 = 1 | 2 | 4,
+}
+
 // FIXME: check types
 pub struct SuperscalarProgram {
     pub size: u32,
