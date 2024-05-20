@@ -23,6 +23,18 @@ pub enum SuperscalarInstructionType {
     INVALID = -1,
 }
 
+impl SuperscalarInstructionType {
+    pub fn is_multiplication(self) -> bool {
+        matches!(
+            self,
+            SuperscalarInstructionType::IMUL_R
+                | SuperscalarInstructionType::IMULH_R
+                | SuperscalarInstructionType::ISMULH_R
+                | SuperscalarInstructionType::IMUL_RCP
+        )
+    }
+}
+
 pub enum ExecutionPort {
     P0 = 1,
     P1 = 2,
