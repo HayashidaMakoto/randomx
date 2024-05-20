@@ -49,9 +49,9 @@ pub struct ProgramConfiguration {
 pub struct VMEnvironment {
     pub r_registers: [u64; 8],
     // FIXME: check the type of float to be used.
-    pub f_registers: [c_float; 4],
-    pub e_registers: [c_float; 4],
-    pub a_registers: [c_float; 4],
+    pub f_registers: [f64; 4],
+    pub e_registers: [f64; 4],
+    pub a_registers: [[f64; 2]; 4],
     // FIXME: ma and mx must be aligned.
     /// Contains the memory address of the next Dataset read
     pub ma: u32,
@@ -82,7 +82,7 @@ impl Default for VMEnvironment {
             r_registers,
             f_registers: [0.0; 4],
             e_registers: [0.0; 4],
-            a_registers: [0.0; 4],
+            a_registers: [[0.0; 2]; 4],
             ma,
             mx,
             fprc: [false; 2],
