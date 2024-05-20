@@ -39,3 +39,21 @@ pub struct SuperscalarProgram {
     pub ipc: f32,
     pub program_buffer: [Instruction; RANDOMX_SUPERSCALAR_MAX_SIZE],
 }
+
+impl SuperscalarProgram {
+    pub fn generate(_gen: &mut BlakeGenerator) -> Self {
+        // let mut current_instruction = Instruction::
+        let mut _macro_op_index = 0;
+        let mut _code_size = 0;
+        let mut _macro_op_count = 0;
+        let mut _cycle = 0;
+        let mut _dep_cycle = 0;
+        let mut _retire_cycle = 0;
+        let mut _ports_saturated: bool = false;
+        let mut _program_size = 0;
+        let mut _mul_count = 0;
+        let mut _decode_cycle = 0;
+        let mut _throw_away_count = 0;
+        unimplemented!()
+    }
+}
