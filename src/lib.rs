@@ -2,6 +2,7 @@ use aes::cipher::{generic_array::GenericArray, BlockDecrypt, BlockEncrypt, KeyIn
 use aes::Aes128;
 use blake2::{Blake2b512, Digest};
 
+pub mod helpers;
 pub mod parameters;
 pub mod superscalar;
 pub mod vm;
