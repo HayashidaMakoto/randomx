@@ -1,3 +1,6 @@
+use crate::parameters::RANDOMX_SUPERSCALAR_MAX_SIZE;
+use crate::vm::Instruction;
+
 // FIXME: check types
 
 pub struct SuperscalarProgram {
@@ -9,8 +12,9 @@ pub struct SuperscalarProgram {
     pub cpu_latency: u32,
     pub asic_latency: u32,
     pub mul_count: u32,
-    pub cpu_latencies: [u32;8],
+    pub cpu_latencies: [u32; 8],
     pub asic_latencies: [u32; 8],
     // FIXME
     pub ipc: f32,
+    pub program_buffer: [Instruction; RANDOMX_SUPERSCALAR_MAX_SIZE],
 }
