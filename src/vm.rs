@@ -37,6 +37,14 @@ pub fn opcode(i: EncodedInstruction) -> u8 {
     i as u8
 }
 
+pub struct ProgramConfiguration {
+    pub emask: [u64; 2],
+    pub read_reg0: u32,
+    pub read_reg1: u32,
+    pub read_reg2: u32,
+    pub read_reg3: u32,
+}
+
 pub struct VMEnvironment {
     pub r_registers: [u64; 8],
     // FIXME: check the type of float to be used.
@@ -58,6 +66,7 @@ pub struct VMEnvironment {
     pub program_buffer: [u64; RANDOMX_PROGRAM_SIZE as usize],
 
     pub scratchpad: [u8; RANDOMX_SCRATCHPAD_L3 as usize],
+    pub configuration: ProgramConfiguration,
 }
 
 impl Default for VMEnvironment {
@@ -81,6 +90,14 @@ impl Default for VMEnvironment {
             sp_addr1: ma,
             program_buffer: [0; RANDOMX_PROGRAM_SIZE as usize],
             scratchpad: [0; RANDOMX_SCRATCHPAD_L3 as usize],
+            // FIXME:
+            configuration: ProgramConfiguration {
+                emask: [0; 2],
+                read_reg0: 0,
+                read_reg1: 0,
+                read_reg2: 0,
+                read_reg3: 0,
+            },
         }
     }
 }
