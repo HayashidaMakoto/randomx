@@ -1,6 +1,7 @@
-use std::ffi::c_float;
-
-use crate::parameters::{RANDOMX_PROGRAM_ITERATIONS, RANDOMX_PROGRAM_SIZE, RANDOMX_SCRATCHPAD_L3};
+use crate::{
+    helpers::f64_from_u64,
+    parameters::{RANDOMX_PROGRAM_ITERATIONS, RANDOMX_PROGRAM_SIZE, RANDOMX_SCRATCHPAD_L3},
+};
 
 /// Each instruction word is 64 bits long
 /// 63         32       24      16       8         0
@@ -107,6 +108,33 @@ impl VMEnvironment {
     /// Load the program into the program buffer of the environment
     pub fn load_program(_env: &mut Self, _filename: String) {
         //
+    }
+
+    /// Build a virtual machine environment based on the given configuration.
+    /// It follows the [section 4.5 - VM
+    /// programming](https://github.com/tevador/RandomX/blob/master/doc/specs.md#45-vm-programming).
+    pub fn from_configuration(config: [u64; 16]) -> Self {
+        // FIXME: continue
+        let a0_l: f64 = f64_from_u64(config[0]);
+        let a0_h: f64 = f64_from_u64(config[1]);
+        let a1_l: f64 = f64_from_u64(config[2]);
+        let a1_h: f64 = f64_from_u64(config[3]);
+        let a2_l: f64 = f64_from_u64(config[4]);
+        let a2_h: f64 = f64_from_u64(config[5]);
+        let a3_l: f64 = f64_from_u64(config[6]);
+        let a4_h: f64 = f64_from_u64(config[7]);
+        // Cache aligned?
+        let ma: u64 = config[8];
+        let mx: u64 = config[10];
+        let addr_regs: u32 = config[12].try_into().unwrap();
+        let config = ProgramConfiguration {
+            emask: [config[14], config[15]],
+            read_reg0: addr_regs & 1,
+            read_reg1: 2 + ((addr_regs >> 1) & 1),
+            read_reg2: 4 + ((addr_regs >> 2) & 1),
+            read_reg3: 8 + ((addr_regs >> 3) & 1),
+        };
+        Self::default()
     }
 }
 
