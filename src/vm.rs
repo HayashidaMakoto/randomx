@@ -37,6 +37,7 @@ pub fn opcode(i: EncodedInstruction) -> u8 {
     i as u8
 }
 
+// FIXME: enforce alignment
 pub struct ProgramConfiguration {
     pub emask: [u64; 2],
     pub read_reg0: u32,
