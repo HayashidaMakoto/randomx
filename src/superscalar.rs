@@ -36,6 +36,7 @@ impl SuperscalarInstructionType {
 }
 
 pub enum ExecutionPort {
+    Null = 0,
     P0 = 1,
     P1 = 2,
     P5 = 4,
