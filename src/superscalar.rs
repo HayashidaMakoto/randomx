@@ -59,7 +59,7 @@ pub struct SuperscalarProgram {
     pub asic_latencies: [u32; 8],
     // FIXME
     pub ipc: f32,
-    pub program_buffer: [Instruction; RANDOMX_SUPERSCALAR_MAX_SIZE],
+    pub program_buffer: [Instruction; RANDOMX_SUPERSCALAR_MAX_SIZE as usize],
 }
 
 impl SuperscalarProgram {

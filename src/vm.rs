@@ -55,9 +55,9 @@ pub struct VMEnvironment {
     pub ic: u32,
     pub sp_addr0: u32,
     pub sp_addr1: u32,
-    pub program_buffer: [u64; RANDOMX_PROGRAM_SIZE],
+    pub program_buffer: [u64; RANDOMX_PROGRAM_SIZE as usize],
 
-    pub scratchpad: [u8; RANDOMX_SCRATCHPAD_L3],
+    pub scratchpad: [u8; RANDOMX_SCRATCHPAD_L3 as usize],
 }
 
 impl Default for VMEnvironment {
@@ -79,8 +79,8 @@ impl Default for VMEnvironment {
             ic: RANDOMX_PROGRAM_ITERATIONS,
             sp_addr0: mx,
             sp_addr1: ma,
-            program_buffer: [0; RANDOMX_PROGRAM_SIZE],
-            scratchpad: [0; RANDOMX_SCRATCHPAD_L3],
+            program_buffer: [0; RANDOMX_PROGRAM_SIZE as usize],
+            scratchpad: [0; RANDOMX_SCRATCHPAD_L3 as usize],
         }
     }
 }

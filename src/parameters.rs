@@ -2,54 +2,54 @@
 //! They are listed on [RandomX
 //! specs](https://github.com/tevador/RandomX/blob/master/doc/specs.md)
 /// The number of 1 KiB Argon2 blocks in the Cache
-pub const RANDOMX_ARGON_MEMORY: usize = 262144;
+pub const RANDOMX_ARGON_MEMORY: u64 = 262144;
 
 /// The number of Argon2d iterations for Cache initialization
-pub const RANDOMX_ARGON_ITERATIONS: usize = 3;
+pub const RANDOMX_ARGON_ITERATIONS: u64 = 3;
 
 /// The number of parallel lanes for Cache initialization
-pub const RANDOMX_ARGON_LANES: usize = 1;
+pub const RANDOMX_ARGON_LANES: u64 = 1;
 
 /// Argon2 salt
 pub const RANDOMX_ARGON_SALT: [u8; 8] = [b'R', b'a', b'n', b'd', b'o', b'm', b'X', b'\x03'];
 
 /// The number of random Cache accesses per Dataset item
-pub const RANDOMX_CACHE_ACCESSES: usize = 8;
+pub const RANDOMX_CACHE_ACCESSES: u64 = 8;
 
 /// Target latency for SuperscalarHash (in cycles of the reference CPU)
-pub const RANDOMX_SUPERSCALAR_LATENCY: usize = 170;
+pub const RANDOMX_SUPERSCALAR_LATENCY: u64 = 170;
 
-pub const RANDOMX_SUPERSCALAR_MAX_SIZE: usize = 3 * RANDOMX_SUPERSCALAR_LATENCY + 2;
+pub const RANDOMX_SUPERSCALAR_MAX_SIZE: u64 = 3 * RANDOMX_SUPERSCALAR_LATENCY + 2;
 
 /// Dataset base size in bytes
-pub const RANDOMX_DATASET_BASE_SIZE: usize = 2147483648;
+pub const RANDOMX_DATASET_BASE_SIZE: u64 = 2147483648;
 
 /// Dataset extra size in bytes
-pub const RANDOMX_DATASET_EXTRA_SIZE: usize = 33554368;
+pub const RANDOMX_DATASET_EXTRA_SIZE: u64 = 33554368;
 
 /// The number of instructions in a RandomX program
-pub const RANDOMX_PROGRAM_SIZE: usize = 256;
+pub const RANDOMX_PROGRAM_SIZE: u64 = 256;
 
 /// The number of iterations per program
 pub const RANDOMX_PROGRAM_ITERATIONS: u32 = 2048;
 
 /// The number of programs per hash
-pub const RANDOMX_PROGRAM_COUNT: usize = 8;
+pub const RANDOMX_PROGRAM_COUNT: u64 = 8;
 
 /// Jump condition mask size in bits
-pub const RANDOMX_JUMP_BITS: usize = 8;
+pub const RANDOMX_JUMP_BITS: u64 = 8;
 
 /// Jump condition mask offset in bits
-pub const RANDOMX_JUMP_OFFSET: usize = 8;
+pub const RANDOMX_JUMP_OFFSET: u64 = 8;
 
 /// Scratchpad L3 size in bytes
-pub const RANDOMX_SCRATCHPAD_L3: usize = 2097152;
+pub const RANDOMX_SCRATCHPAD_L3: u64 = 2097152;
 
 /// Scratchpad L2 size in bytes
-pub const RANDOMX_SCRATCHPAD_L2: usize = 262144;
+pub const RANDOMX_SCRATCHPAD_L2: u64 = 262144;
 
 /// Scratchpad L1 size in bytes
-pub const RANDOMX_SCRATCHPAD_L1: usize = 16384;
+pub const RANDOMX_SCRATCHPAD_L1: u64 = 16384;
 
 /// Keys used for
 /// [AesGenerator1R](https://github.com/tevador/RandomX/blob/master/doc/specs.md#32-aesgenerator1r)
@@ -129,46 +129,52 @@ pub const AES_HASH1R_XKEY1: [u8; 16] = [
     0xd1, 0x63, 0xb2, 0x61, 0x3c, 0xe0, 0xf4, 0x51, 0xc6, 0x43, 0x10, 0xee, 0x9b, 0xf9, 0x18, 0xed,
 ];
 
-pub const BLAKE_GENERATOR_SEED_MAX_SIZE: usize = 60;
+pub const BLAKE_GENERATOR_SEED_MAX_SIZE: u64 = 60;
 
 /// Instruction frequencies
 
 /// Integer instructions
-pub const RANDOMX_FREQ_IADD_RS: usize = 16;
-pub const RANDOMX_FREQ_IADD_M: usize = 7;
-pub const RANDOMX_FREQ_ISUB_R: usize = 16;
-pub const RANDOMX_FREQ_ISUB_M: usize = 7;
-pub const RANDOMX_FREQ_IMUL_R: usize = 16;
-pub const RANDOMX_FREQ_IMUL_M: usize = 4;
-pub const RANDOMX_FREQ_IMULH_R: usize = 4;
-pub const RANDOMX_FREQ_IMULH_M: usize = 1;
-pub const RANDOMX_FREQ_ISMULH_R: usize = 4;
-pub const RANDOMX_FREQ_ISMULH_M: usize = 1;
-pub const RANDOMX_FREQ_IMUL_RCP: usize = 8;
-pub const RANDOMX_FREQ_INEG_R: usize = 2;
-pub const RANDOMX_FREQ_IXOR_R: usize = 15;
-pub const RANDOMX_FREQ_IXOR_M: usize = 5;
-pub const RANDOMX_FREQ_IROR_R: usize = 8;
-pub const RANDOMX_FREQ_IROL_R: usize = 2;
-pub const RANDOMX_FREQ_ISWAP_R: usize = 4;
+pub const RANDOMX_FREQ_IADD_RS: u64 = 16;
+pub const RANDOMX_FREQ_IADD_M: u64 = 7;
+pub const RANDOMX_FREQ_ISUB_R: u64 = 16;
+pub const RANDOMX_FREQ_ISUB_M: u64 = 7;
+pub const RANDOMX_FREQ_IMUL_R: u64 = 16;
+pub const RANDOMX_FREQ_IMUL_M: u64 = 4;
+pub const RANDOMX_FREQ_IMULH_R: u64 = 4;
+pub const RANDOMX_FREQ_IMULH_M: u64 = 1;
+pub const RANDOMX_FREQ_ISMULH_R: u64 = 4;
+pub const RANDOMX_FREQ_ISMULH_M: u64 = 1;
+pub const RANDOMX_FREQ_IMUL_RCP: u64 = 8;
+pub const RANDOMX_FREQ_INEG_R: u64 = 2;
+pub const RANDOMX_FREQ_IXOR_R: u64 = 15;
+pub const RANDOMX_FREQ_IXOR_M: u64 = 5;
+pub const RANDOMX_FREQ_IROR_R: u64 = 8;
+pub const RANDOMX_FREQ_IROL_R: u64 = 2;
+pub const RANDOMX_FREQ_ISWAP_R: u64 = 4;
 
 /// Floating point instructions
-pub const RANDOMX_FREQ_FSWAP_R: usize = 4;
-pub const RANDOMX_FREQ_FADD_R: usize = 16;
-pub const RANDOMX_FREQ_FADD_M: usize = 5;
-pub const RANDOMX_FREQ_FSUB_R: usize = 16;
-pub const RANDOMX_FREQ_FSUB_M: usize = 5;
-pub const RANDOMX_FREQ_FSCAL_R: usize = 6;
-pub const RANDOMX_FREQ_FMUL_R: usize = 32;
-pub const RANDOMX_FREQ_FDIV_M: usize = 4;
-pub const RANDOMX_FREQ_FSQRT_R: usize = 6;
+pub const RANDOMX_FREQ_FSWAP_R: u64 = 4;
+pub const RANDOMX_FREQ_FADD_R: u64 = 16;
+pub const RANDOMX_FREQ_FADD_M: u64 = 5;
+pub const RANDOMX_FREQ_FSUB_R: u64 = 16;
+pub const RANDOMX_FREQ_FSUB_M: u64 = 5;
+pub const RANDOMX_FREQ_FSCAL_R: u64 = 6;
+pub const RANDOMX_FREQ_FMUL_R: u64 = 32;
+pub const RANDOMX_FREQ_FDIV_M: u64 = 4;
+pub const RANDOMX_FREQ_FSQRT_R: u64 = 6;
 
 /// Control instructions
-pub const RANDOMX_FREQ_CBRANCH: usize = 25;
-pub const RANDOMX_FREQ_CFROUND: usize = 1;
+pub const RANDOMX_FREQ_CBRANCH: u64 = 25;
+pub const RANDOMX_FREQ_CFROUND: u64 = 1;
 
 /// Store instruction
-pub const RANDOMX_FREQ_ISTORE: usize = 16;
+pub const RANDOMX_FREQ_ISTORE: u64 = 16;
 
 /// No-op instruction
-pub const RANDOMX_FREQ_NOP: usize = 0;
+pub const RANDOMX_FREQ_NOP: u64 = 0;
+
+/// Float configuration
+pub const FLOAT_MANTISSA_SIZE: u64 = 52;
+pub const FLOAT_EXPONENT_SIZE: u64 = 11;
+
+pub const FLOAT_EXPONENT_SIZE: u64 = 11;

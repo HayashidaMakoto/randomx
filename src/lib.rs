@@ -314,7 +314,7 @@ impl BlakeGenerator {
         // FIXME: the reference implementation do not raise any error here. It
         // only truncates the seed to 60 bytes.
         // Q: Any potential attack?
-        assert!(seed.len() <= parameters::BLAKE_GENERATOR_SEED_MAX_SIZE);
+        assert!(seed.len() <= parameters::BLAKE_GENERATOR_SEED_MAX_SIZE as usize);
 
         let mut data: [u8; 64] = [0; 64];
         // We initialize with only zeroes. The seed must be padded with zeroes if
