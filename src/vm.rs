@@ -132,7 +132,7 @@ impl VMEnvironment {
             read_reg0: addr_regs & 1,
             read_reg1: 2 + ((addr_regs >> 1) & 1),
             read_reg2: 4 + ((addr_regs >> 2) & 1),
-            read_reg3: 8 + ((addr_regs >> 3) & 1),
+            read_reg3: 6 + ((addr_regs >> 3) & 1),
         };
         Self::default()
     }
