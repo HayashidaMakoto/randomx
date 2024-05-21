@@ -27,6 +27,12 @@ pub const RANDOMX_DATASET_BASE_SIZE: u64 = 2147483648;
 /// Dataset extra size in bytes
 pub const RANDOMX_DATASET_EXTRA_SIZE: u64 = 33554368;
 
+pub const RANDOMX_DATASET_INDEX_SIZE: u64 = 64;
+
+/// Data extra items
+pub const RANDOMX_DATASET_EXTRA_INDEX: u64 =
+    RANDOMSET_DATASET_EXTRA_SIZE / RANDOMX_DATASET_INDEX_SIZE;
+
 /// The number of instructions in a RandomX program
 pub const RANDOMX_PROGRAM_SIZE: u64 = 256;
 
