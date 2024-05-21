@@ -10,6 +10,8 @@ pub const RANDOMX_ARGON_ITERATIONS: u64 = 3;
 /// The number of parallel lanes for Cache initialization
 pub const RANDOMX_ARGON_LANES: u64 = 1;
 
+pub const RANDOMX_ARGON_BLOCK_SIZE: u64 = 1024;
+
 /// Argon2 salt
 pub const RANDOMX_ARGON_SALT: [u8; 8] = [b'R', b'a', b'n', b'd', b'o', b'm', b'X', b'\x03'];
 
@@ -21,6 +23,10 @@ pub const RANDOMX_SUPERSCALAR_LATENCY: u64 = 170;
 
 pub const RANDOMX_SUPERSCALAR_MAX_SIZE: u64 = 3 * RANDOMX_SUPERSCALAR_LATENCY + 2;
 
+pub const RANDOMX_CACHE_LINE_SIZE: u64 = RANDOMX_DATASET_INDEX_SIZE;
+
+pub const RANDOMX_CACHE_SIZE: u64 = RANDOMX_ARGON_MEMORY * RANDOMX_ARGON_BLOCK_SIZE;
+
 /// Dataset base size in bytes
 pub const RANDOMX_DATASET_BASE_SIZE: u64 = 2147483648;
 
@@ -31,7 +37,7 @@ pub const RANDOMX_DATASET_INDEX_SIZE: u64 = 64;
 
 /// Data extra items
 pub const RANDOMX_DATASET_EXTRA_INDEX: u64 =
-    RANDOMSET_DATASET_EXTRA_SIZE / RANDOMX_DATASET_INDEX_SIZE;
+    RANDOMX_DATASET_EXTRA_SIZE / RANDOMX_DATASET_INDEX_SIZE;
 
 /// The number of instructions in a RandomX program
 pub const RANDOMX_PROGRAM_SIZE: u64 = 256;
