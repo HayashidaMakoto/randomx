@@ -1,6 +1,9 @@
 use crate::{
     helpers::f64_from_u64,
-    parameters::{RANDOMX_PROGRAM_ITERATIONS, RANDOMX_PROGRAM_SIZE, RANDOMX_SCRATCHPAD_L3},
+    parameters::{
+        RANDOMX_CACHE_LINE_ASSIGN_MASK, RANDOMX_CACHE_LINE_SIZE, RANDOMX_DATASET_EXTRA_ITEMS,
+        RANDOMX_PROGRAM_ITERATIONS, RANDOMX_PROGRAM_SIZE, RANDOMX_SCRATCHPAD_L3,
+    },
 };
 
 /// Each instruction word is 64 bits long
@@ -9,6 +12,10 @@ use crate::{
 /// |  imm32    |    mod |   src |   dst |  opcode |
 /// ------------------------------------------------
 pub type EncodedInstruction = u64;
+
+/// Alias for the addresses. Equivalent to addr_t in the reference
+/// implementation
+pub type Address = u32;
 
 /// > A 32-bit immediate value that can be used as the source operand and is
 /// > used to calculate addresses for memory operations. The immediate value is
@@ -47,28 +54,32 @@ pub struct ProgramConfiguration {
     pub read_reg3: u32,
 }
 
+// The VMEnvironment tries to replicate the structure defined in virtual_machine.hpp
 pub struct VMEnvironment {
+    // Note: must be aligned as in virtual_machine.hpp
+    pub program_buffer: [EncodedInstruction; RANDOMX_PROGRAM_SIZE as usize],
+    // this is called RegisterFile in the reference implementation
     pub r_registers: [u64; 8],
-    // FIXME: check the type of float to be used.
     pub f_registers: [f64; 4],
     pub e_registers: [f64; 4],
     pub a_registers: [[f64; 2]; 4],
-    // FIXME: ma and mx must be aligned.
+    // ProgramConfiguration
+    pub configuration: ProgramConfiguration,
+    // The two following fields are stored in MemoryRegisters
     /// Contains the memory address of the next Dataset read
-    pub ma: u32,
+    pub ma: Address,
     /// Contains the memory address of the next Dataset prefetch
-    pub mx: u32,
-
+    pub mx: Address,
+    // FIXME: there is additional pointer in MemoryRegisters.
+    // FIXME: union randomx_cache randomx_dataset
+    pub dataset_offset: u64,
     pub fprc: [bool; 2],
 
     // FIXME: correct type?
     pub ic: u32,
     pub sp_addr0: u32,
     pub sp_addr1: u32,
-    pub program_buffer: [u64; RANDOMX_PROGRAM_SIZE as usize],
-
     pub scratchpad: [u8; RANDOMX_SCRATCHPAD_L3 as usize],
-    pub configuration: ProgramConfiguration,
 }
 
 impl Default for VMEnvironment {
@@ -78,28 +89,31 @@ impl Default for VMEnvironment {
     fn default() -> VMEnvironment {
         let ma = 0;
         let mx = 0;
+        let configuration = ProgramConfiguration {
+            emask: [0; 2],
+            read_reg0: 0,
+            read_reg1: 0,
+            read_reg2: 0,
+            read_reg3: 0,
+        };
         let r_registers = [0; 8];
         VMEnvironment {
+            program_buffer: [0; RANDOMX_PROGRAM_SIZE as usize],
             r_registers,
             f_registers: [0.0; 4],
             e_registers: [0.0; 4],
             a_registers: [[0.0; 2]; 4],
             ma,
             mx,
+            dataset_offset: 0,
+            // FIXME: additional fields, see doc
             fprc: [false; 2],
             ic: RANDOMX_PROGRAM_ITERATIONS,
             sp_addr0: mx,
             sp_addr1: ma,
-            program_buffer: [0; RANDOMX_PROGRAM_SIZE as usize],
-            scratchpad: [0; RANDOMX_SCRATCHPAD_L3 as usize],
             // FIXME:
-            configuration: ProgramConfiguration {
-                emask: [0; 2],
-                read_reg0: 0,
-                read_reg1: 0,
-                read_reg2: 0,
-                read_reg3: 0,
-            },
+            configuration,
+            scratchpad: [0; RANDOMX_SCRATCHPAD_L3 as usize],
         }
     }
 }
@@ -122,19 +136,42 @@ impl VMEnvironment {
         let a2_l: f64 = f64_from_u64(config[4]);
         let a2_h: f64 = f64_from_u64(config[5]);
         let a3_l: f64 = f64_from_u64(config[6]);
-        let a4_h: f64 = f64_from_u64(config[7]);
-        // Cache aligned?
-        let ma: u64 = config[8];
-        let mx: u64 = config[10];
+        let a3_h: f64 = f64_from_u64(config[7]);
+        // FIXME: check this
+        // FIXME: check u32 converstion
+        let ma: u32 = (config[8] & RANDOMX_CACHE_LINE_ASSIGN_MASK)
+            .try_into()
+            .unwrap();
+        // FIXME: check u32 converstion
+        let mx: u32 = config[10].try_into().unwrap();
         let addr_regs: u32 = config[12].try_into().unwrap();
-        let config = ProgramConfiguration {
+        let dataset_offset: u64 =
+            (config[13] % (RANDOMX_DATASET_EXTRA_ITEMS + 1)) * RANDOMX_CACHE_LINE_SIZE;
+        let configuration = ProgramConfiguration {
             emask: [config[14], config[15]],
             read_reg0: addr_regs & 1,
             read_reg1: 2 + ((addr_regs >> 1) & 1),
             read_reg2: 4 + ((addr_regs >> 2) & 1),
             read_reg3: 6 + ((addr_regs >> 3) & 1),
         };
-        Self::default()
+        Self {
+            program_buffer: [0; RANDOMX_PROGRAM_SIZE as usize],
+            r_registers: [0; 8],
+            f_registers: [0.0; 4],
+            e_registers: [0.0; 4],
+            a_registers: [[a0_h, a0_l], [a1_h, a1_l], [a2_h, a2_l], [a3_h, a3_l]],
+            configuration,
+            ma,
+            mx,
+            // FIXME: there is additional pointer in MemoryRegisters.
+            // FIXME: union randomx_cache randomx_dataset
+            dataset_offset,
+            fprc: [false; 2],
+            ic: RANDOMX_PROGRAM_ITERATIONS,
+            sp_addr0: mx,
+            sp_addr1: ma,
+            scratchpad: [0; RANDOMX_SCRATCHPAD_L3 as usize],
+        }
     }
 }
 
