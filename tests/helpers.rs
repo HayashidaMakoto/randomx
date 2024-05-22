@@ -3,7 +3,7 @@ use randomx::helpers::f64_from_u64;
 #[test]
 fn test_unitest_from_ref_implementation() {
     let input: u64 = 14955972954624606980;
-    let res: f64 = f64_from_u64(input);
+    let res: u64 = f64_from_u64(input);
     // Converting into hexadecimal because the print does not work properly
     // Generated from the reference implementation using:
     // ```

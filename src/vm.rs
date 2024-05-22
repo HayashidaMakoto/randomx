@@ -62,7 +62,9 @@ pub struct VMEnvironment {
     pub r_registers: [u64; 8],
     pub f_registers: [f64; 4],
     pub e_registers: [f64; 4],
-    pub a_registers: [[f64; 2]; 4],
+    // We do use only u64 instead of f64 because we only do care about the
+    // underlying bytes
+    pub a_registers: [[u64; 2]; 4],
     // ProgramConfiguration
     pub configuration: ProgramConfiguration,
     // The two following fields are stored in MemoryRegisters
@@ -105,7 +107,7 @@ impl Default for VMEnvironment {
             r_registers,
             f_registers: [0.0; 4],
             e_registers: [0.0; 4],
-            a_registers: [[0.0; 2]; 4],
+            a_registers: [[0; 2]; 4],
             ma,
             mx,
             dataset_offset: 0,
@@ -131,14 +133,14 @@ impl VMEnvironment {
     /// It follows the [section 4.5 - VM
     /// programming](https://github.com/tevador/RandomX/blob/master/doc/specs.md#45-vm-programming).
     pub fn from_configuration(config: [u64; 16]) -> Self {
-        let a0_l: f64 = f64_from_u64(config[0]);
-        let a0_h: f64 = f64_from_u64(config[1]);
-        let a1_l: f64 = f64_from_u64(config[2]);
-        let a1_h: f64 = f64_from_u64(config[3]);
-        let a2_l: f64 = f64_from_u64(config[4]);
-        let a2_h: f64 = f64_from_u64(config[5]);
-        let a3_l: f64 = f64_from_u64(config[6]);
-        let a3_h: f64 = f64_from_u64(config[7]);
+        let a0_l: u64 = f64_from_u64(config[0]);
+        let a0_h: u64 = f64_from_u64(config[1]);
+        let a1_l: u64 = f64_from_u64(config[2]);
+        let a1_h: u64 = f64_from_u64(config[3]);
+        let a2_l: u64 = f64_from_u64(config[4]);
+        let a2_h: u64 = f64_from_u64(config[5]);
+        let a3_l: u64 = f64_from_u64(config[6]);
+        let a3_h: u64 = f64_from_u64(config[7]);
         // FIXME: check this
         // FIXME: check u32 converstion
         let ma: u32 = (config[8] & ((1 << 32) - 1)).try_into().unwrap();

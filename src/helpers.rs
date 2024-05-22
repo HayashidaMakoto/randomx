@@ -12,7 +12,9 @@ use crate::parameters::{
 /// | 52-58 | (reserved)  |
 /// | 59-63 | exponent    |
 /// -----------------------
-pub fn f64_from_u64(v: u64) -> f64 {
+/// The function returns a u64 only because we do care about th eactual bytes,
+/// and not the type/representation f64.
+pub fn f64_from_u64(v: u64) -> u64 {
     // We must shift the 4 bits of the exponent on the right of the fraction
     // get bits 59-63
     let exponent: u64 = v >> 59;
@@ -20,8 +22,7 @@ pub fn f64_from_u64(v: u64) -> f64 {
     let exponent: u64 = exponent + (1 << 10) - 1;
     let exponent: u64 = FLOAT_EXPONENT_MASK & exponent;
     let exponent: u64 = exponent << 52;
-    let res = exponent | mantissa;
-    f64::from_bits(res)
+    exponent | mantissa
 }
 
 pub fn static_exponent(v: u64) -> u64 {
