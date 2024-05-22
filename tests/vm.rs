@@ -21,5 +21,22 @@ pub fn test_vm_environment_from_configuration() {
         13992127780735554655,
         11551971154970399794,
     ];
-    let _vm_env: VMEnvironment = VMEnvironment::from_configuration(&config);
+    let vm_env: VMEnvironment = VMEnvironment::from_configuration(config);
+
+    let hexa_exp_a0_lo: [u8; 8] = [0x41, 0x8e, 0x4a, 0x29, 0x7e, 0xbf, 0xc3, 0x04];
+    let hexa_exp_a0_hi: [u8; 8] = [0x40, 0x19, 0xc8, 0x56, 0xc2, 0x67, 0x08, 0xa9];
+    let hexa_exp_a1_lo: [u8; 8] = [0x40, 0xcd, 0x87, 0x25, 0xdf, 0x13, 0x23, 0x8a];
+    let hexa_exp_a1_hi: [u8; 8] = [0x41, 0xe8, 0x07, 0xa5, 0xdc, 0x77, 0x40, 0xb5];
+    let hexa_exp_a2_lo: [u8; 8] = [0x41, 0x76, 0x97, 0x1a, 0x78, 0x9b, 0xee, 0xd7];
+    let hexa_exp_a2_hi: [u8; 8] = [0x41, 0x71, 0x12, 0xc2, 0x74, 0xf9, 0x1d, 0x68];
+    let hexa_exp_a3_lo: [u8; 8] = [0x41, 0x4e, 0x44, 0x17, 0x47, 0xdf, 0x76, 0xc6];
+    let hexa_exp_a3_hi: [u8; 8] = [0x40, 0xbd, 0x22, 0x9e, 0xee, 0xdd, 0x8e, 0x98];
+    assert_eq!(vm_env.a_registers[0][1].to_be_bytes(), hexa_exp_a0_lo);
+    assert_eq!(vm_env.a_registers[0][0].to_be_bytes(), hexa_exp_a0_hi);
+    assert_eq!(vm_env.a_registers[1][1].to_be_bytes(), hexa_exp_a1_lo);
+    assert_eq!(vm_env.a_registers[1][0].to_be_bytes(), hexa_exp_a1_hi);
+    assert_eq!(vm_env.a_registers[2][1].to_be_bytes(), hexa_exp_a2_lo);
+    assert_eq!(vm_env.a_registers[2][0].to_be_bytes(), hexa_exp_a2_hi);
+    assert_eq!(vm_env.a_registers[3][1].to_be_bytes(), hexa_exp_a3_lo);
+    assert_eq!(vm_env.a_registers[3][0].to_be_bytes(), hexa_exp_a3_hi);
 }
