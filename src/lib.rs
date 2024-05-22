@@ -114,86 +114,78 @@ pub fn aes_generator_1r(input: [u8; 64]) -> [u8; 64] {
 /// ```
 pub fn aes_generator_4r(input: [u8; 64]) -> [u8; 64] {
     // state0
+    let key0 = GenericArray::from(parameters::AES_GENERATOR_4R_K0);
+    let key1 = GenericArray::from(parameters::AES_GENERATOR_4R_K1);
+    let key2 = GenericArray::from(parameters::AES_GENERATOR_4R_K2);
+    let key3 = GenericArray::from(parameters::AES_GENERATOR_4R_K3);
+    let key4 = GenericArray::from(parameters::AES_GENERATOR_4R_K4);
+    let key5 = GenericArray::from(parameters::AES_GENERATOR_4R_K5);
+    let key6 = GenericArray::from(parameters::AES_GENERATOR_4R_K6);
+    let key7 = GenericArray::from(parameters::AES_GENERATOR_4R_K7);
     let state0 = {
-        let key0 = GenericArray::from(parameters::AES_GENERATOR_4R_K0);
         let cipher = Aes128::new(&key0);
         let state: [u8; 16] = input[0..16].try_into().unwrap();
         let mut state = GenericArray::from(state);
         cipher.decrypt_block(&mut state);
 
-        let key1 = GenericArray::from(parameters::AES_GENERATOR_4R_K1);
         let cipher = Aes128::new(&key1);
         cipher.decrypt_block(&mut state);
 
-        let key2 = GenericArray::from(parameters::AES_GENERATOR_4R_K2);
         let cipher = Aes128::new(&key2);
         cipher.decrypt_block(&mut state);
 
-        let key3 = GenericArray::from(parameters::AES_GENERATOR_4R_K3);
         let cipher = Aes128::new(&key3);
         cipher.decrypt_block(&mut state);
         state
     };
 
     let state1 = {
-        let key0 = GenericArray::from(parameters::AES_GENERATOR_4R_K0);
         let cipher = Aes128::new(&key0);
         let state: [u8; 16] = input[16..32].try_into().unwrap();
         let mut state = GenericArray::from(state);
         cipher.encrypt_block(&mut state);
 
-        let key1 = GenericArray::from(parameters::AES_GENERATOR_4R_K1);
         let cipher = Aes128::new(&key1);
         cipher.encrypt_block(&mut state);
 
-        let key2 = GenericArray::from(parameters::AES_GENERATOR_4R_K2);
         let cipher = Aes128::new(&key2);
         cipher.encrypt_block(&mut state);
 
-        let key3 = GenericArray::from(parameters::AES_GENERATOR_4R_K3);
         let cipher = Aes128::new(&key3);
         cipher.encrypt_block(&mut state);
         state
     };
 
     let state2 = {
-        let key = GenericArray::from(parameters::AES_GENERATOR_4R_K4);
-        let cipher = Aes128::new(&key);
+        let cipher = Aes128::new(&key4);
         let state: [u8; 16] = input[32..48].try_into().unwrap();
         let mut state = GenericArray::from(state);
         cipher.decrypt_block(&mut state);
 
-        let key = GenericArray::from(parameters::AES_GENERATOR_4R_K5);
-        let cipher = Aes128::new(&key);
+        let cipher = Aes128::new(&key5);
         cipher.decrypt_block(&mut state);
 
-        let key = GenericArray::from(parameters::AES_GENERATOR_4R_K6);
-        let cipher = Aes128::new(&key);
+        let cipher = Aes128::new(&key6);
         cipher.decrypt_block(&mut state);
 
-        let key = GenericArray::from(parameters::AES_GENERATOR_4R_K7);
-        let cipher = Aes128::new(&key);
+        let cipher = Aes128::new(&key7);
         cipher.decrypt_block(&mut state);
         state
     };
 
     let state3 = {
-        let key = GenericArray::from(parameters::AES_GENERATOR_4R_K4);
-        let cipher = Aes128::new(&key);
+        let cipher = Aes128::new(&key4);
         let state: [u8; 16] = input[48..64].try_into().unwrap();
         let mut state = GenericArray::from(state);
         cipher.encrypt_block(&mut state);
 
-        let key = GenericArray::from(parameters::AES_GENERATOR_4R_K5);
-        let cipher = Aes128::new(&key);
+        let cipher = Aes128::new(&key5);
         cipher.encrypt_block(&mut state);
 
-        let key = GenericArray::from(parameters::AES_GENERATOR_4R_K6);
-        let cipher = Aes128::new(&key);
+        let cipher = Aes128::new(&key6);
         cipher.encrypt_block(&mut state);
 
-        let key = GenericArray::from(parameters::AES_GENERATOR_4R_K7);
-        let cipher = Aes128::new(&key);
+        let cipher = Aes128::new(&key7);
         cipher.encrypt_block(&mut state);
         state
     };
