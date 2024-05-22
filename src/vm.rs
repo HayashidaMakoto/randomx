@@ -57,7 +57,7 @@ pub struct ProgramConfiguration {
 // The VMEnvironment tries to replicate the structure defined in virtual_machine.hpp
 pub struct VMEnvironment {
     // Note: must be aligned as in virtual_machine.hpp
-    pub program_buffer: [EncodedInstruction; RANDOMX_PROGRAM_SIZE as usize],
+    pub program_buffer: Vec<EncodedInstruction>,
     // this is called RegisterFile in the reference implementation
     pub r_registers: [u64; 8],
     pub f_registers: [f64; 4],
@@ -79,7 +79,7 @@ pub struct VMEnvironment {
     pub ic: u32,
     pub sp_addr0: u32,
     pub sp_addr1: u32,
-    pub scratchpad: [u8; RANDOMX_SCRATCHPAD_L3 as usize],
+    pub scratchpad: Vec<u8>,
 }
 
 impl Default for VMEnvironment {
@@ -87,6 +87,9 @@ impl Default for VMEnvironment {
     /// It also performs the initialization described in
     /// [4.6.1](https://github.com/tevador/RandomX/blob/master/doc/specs.md#461-initialization).
     fn default() -> VMEnvironment {
+        let program_buffer: Vec<EncodedInstruction> =
+            Vec::with_capacity(RANDOMX_PROGRAM_SIZE as usize);
+        let scratchpad: Vec<u8> = Vec::with_capacity(RANDOMX_SCRATCHPAD_L3 as usize);
         let ma = 0;
         let mx = 0;
         let configuration = ProgramConfiguration {
@@ -98,7 +101,7 @@ impl Default for VMEnvironment {
         };
         let r_registers = [0; 8];
         VMEnvironment {
-            program_buffer: [0; RANDOMX_PROGRAM_SIZE as usize],
+            program_buffer,
             r_registers,
             f_registers: [0.0; 4],
             e_registers: [0.0; 4],
@@ -113,7 +116,7 @@ impl Default for VMEnvironment {
             sp_addr1: ma,
             // FIXME:
             configuration,
-            scratchpad: [0; RANDOMX_SCRATCHPAD_L3 as usize],
+            scratchpad,
         }
     }
 }
@@ -128,7 +131,6 @@ impl VMEnvironment {
     /// It follows the [section 4.5 - VM
     /// programming](https://github.com/tevador/RandomX/blob/master/doc/specs.md#45-vm-programming).
     pub fn from_configuration(config: [u64; 16]) -> Self {
-        // FIXME: continue
         let a0_l: f64 = f64_from_u64(config[0]);
         let a0_h: f64 = f64_from_u64(config[1]);
         let a1_l: f64 = f64_from_u64(config[2]);
@@ -139,23 +141,28 @@ impl VMEnvironment {
         let a3_h: f64 = f64_from_u64(config[7]);
         // FIXME: check this
         // FIXME: check u32 converstion
-        let ma: u32 = (config[8] & RANDOMX_CACHE_LINE_ASSIGN_MASK)
-            .try_into()
-            .unwrap();
+        let ma: u32 = (config[8] & ((1 << 32) - 1)).try_into().unwrap();
         // FIXME: check u32 converstion
-        let mx: u32 = config[10].try_into().unwrap();
-        let addr_regs: u32 = config[12].try_into().unwrap();
+        let mx: u32 = (config[10] & ((1 << 32) - 1)).try_into().unwrap();
+        // FIXME: we could have a boolean for the read reg0?
+        let read_reg0: u32 = (config[12] & 1).try_into().unwrap();
+        let read_reg1: u32 = (config[12] & 2).try_into().unwrap();
+        let read_reg2: u32 = (config[12] & 4).try_into().unwrap();
+        let read_reg3: u32 = (config[12] & 8).try_into().unwrap();
         let dataset_offset: u64 =
             (config[13] % (RANDOMX_DATASET_EXTRA_ITEMS + 1)) * RANDOMX_CACHE_LINE_SIZE;
         let configuration = ProgramConfiguration {
             emask: [config[14], config[15]],
-            read_reg0: addr_regs & 1,
-            read_reg1: 2 + ((addr_regs >> 1) & 1),
-            read_reg2: 4 + ((addr_regs >> 2) & 1),
-            read_reg3: 6 + ((addr_regs >> 3) & 1),
+            read_reg0,
+            read_reg1,
+            read_reg2,
+            read_reg3,
         };
+        let program_buffer: Vec<EncodedInstruction> =
+            Vec::with_capacity(RANDOMX_PROGRAM_SIZE as usize);
+        let scratchpad: Vec<u8> = Vec::with_capacity(RANDOMX_SCRATCHPAD_L3 as usize);
         Self {
-            program_buffer: [0; RANDOMX_PROGRAM_SIZE as usize],
+            program_buffer,
             r_registers: [0; 8],
             f_registers: [0.0; 4],
             e_registers: [0.0; 4],
@@ -170,7 +177,7 @@ impl VMEnvironment {
             ic: RANDOMX_PROGRAM_ITERATIONS,
             sp_addr0: mx,
             sp_addr1: ma,
-            scratchpad: [0; RANDOMX_SCRATCHPAD_L3 as usize],
+            scratchpad,
         }
     }
 }
