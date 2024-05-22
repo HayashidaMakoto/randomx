@@ -23,3 +23,14 @@ pub fn f64_from_u64(v: u64) -> f64 {
     let res = exponent | mantissa;
     f64::from_bits(res)
 }
+
+pub fn static_exponent(v: u64) -> u64 {
+    let exponent = RANDOMX_CONST_EXPONENT_BITS;
+    let exponent =
+        exponent | (v >> (64 - RANDOMX_STATIC_EXPONENT_BITS) << RANDOMX_DYNAMIC_EXPONENT_BITS);
+    exponent << FLOAT_MANTISSA_SIZE
+}
+
+pub fn float_mask(v: u64) -> u64 {
+    (v & ((1 << 22) - 1)) | (static_exponent(v))
+}

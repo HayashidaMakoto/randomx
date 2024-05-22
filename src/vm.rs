@@ -1,8 +1,8 @@
 use crate::{
-    helpers::f64_from_u64,
+    helpers::{f64_from_u64, float_mask},
     parameters::{
-        RANDOMX_CACHE_LINE_ASSIGN_MASK, RANDOMX_CACHE_LINE_SIZE, RANDOMX_DATASET_EXTRA_ITEMS,
-        RANDOMX_PROGRAM_ITERATIONS, RANDOMX_PROGRAM_SIZE, RANDOMX_SCRATCHPAD_L3,
+        RANDOMX_CACHE_LINE_SIZE, RANDOMX_DATASET_EXTRA_ITEMS, RANDOMX_PROGRAM_ITERATIONS,
+        RANDOMX_PROGRAM_SIZE, RANDOMX_SCRATCHPAD_L3,
     },
 };
 
@@ -152,7 +152,7 @@ impl VMEnvironment {
         let dataset_offset: u64 =
             (config[13] % (RANDOMX_DATASET_EXTRA_ITEMS + 1)) * RANDOMX_CACHE_LINE_SIZE;
         let configuration = ProgramConfiguration {
-            emask: [config[14], config[15]],
+            emask: [float_mask(config[14]), float_mask(config[15])],
             read_reg0,
             read_reg1,
             read_reg2,
