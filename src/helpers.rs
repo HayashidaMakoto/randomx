@@ -1,11 +1,14 @@
-use crate::parameters::{FLOAT_EXPONENT_MASK, FLOAT_MANTISSA_MASK};
+use crate::parameters::{
+    FLOAT_EXPONENT_MASK, FLOAT_MANTISSA_MASK, FLOAT_MANTISSA_SIZE, RANDOMX_CONST_EXPONENT_BITS,
+    RANDOMX_DYNAMIC_EXPONENT_BITS, RANDOMX_STATIC_EXPONENT_BITS,
+};
 
 /// The fraction has full 52 bits of precision and the exponent value ranges
 /// from 0 to 31. These values are obtained from the initialization quadword (in
 /// little endian format) according to Table below:
 /// -----------------------
-/// | bits 	| description |
-/// | 0-51 	| mantissa    |
+/// | bits  | description |
+/// | 0-51  | mantissa    |
 /// | 52-58 | (reserved)  |
 /// | 59-63 | exponent    |
 /// -----------------------
