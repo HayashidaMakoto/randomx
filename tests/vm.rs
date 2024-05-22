@@ -33,6 +33,7 @@ pub fn test_vm_environment_from_configuration() {
     let hexa_exp_a3_hi: [u8; 8] = [0x40, 0xbd, 0x22, 0x9e, 0xee, 0xdd, 0x8e, 0x98];
     let hexa_exp_emask0: [u8; 8] = [0x3c, 0x00, 0x00, 0x00, 0x00, 0x1e, 0x14, 0x5f];
     let hexa_exp_emask1: [u8; 8] = [0x3a, 0x00, 0x00, 0x00, 0x00, 0x11, 0xd4, 0x32];
+    // a-registers
     assert_eq!(vm_env.a_registers[0][1].to_be_bytes(), hexa_exp_a0_lo);
     assert_eq!(vm_env.a_registers[0][0].to_be_bytes(), hexa_exp_a0_hi);
     assert_eq!(vm_env.a_registers[1][1].to_be_bytes(), hexa_exp_a1_lo);
@@ -42,6 +43,12 @@ pub fn test_vm_environment_from_configuration() {
     assert_eq!(vm_env.a_registers[3][1].to_be_bytes(), hexa_exp_a3_lo);
     assert_eq!(vm_env.a_registers[3][0].to_be_bytes(), hexa_exp_a3_hi);
 
+    // emask0 and emask1
     assert_eq!(vm_env.configuration.emask[0].to_be_bytes(), hexa_exp_emask0);
     assert_eq!(vm_env.configuration.emask[1].to_be_bytes(), hexa_exp_emask1);
+
+    // FIXME: read_reg
+    // FIXME: dataoffset
+    // FIXME: ma
+    // FIXME: mx
 }
